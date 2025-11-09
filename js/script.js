@@ -492,6 +492,9 @@ let speechRate = 0.8;
 let isDarkMode = false;
 
 // DOM elements
+const loadingScreen = document.getElementById("loadingScreen");
+const appContent = document.getElementById("appContent");
+const loadingBar = document.getElementById("loadingBar");
 const lessonInfo = document.getElementById("lessonInfo");
 const lineA = document.getElementById("lineA");
 const lineB = document.getElementById("lineB");
@@ -503,6 +506,7 @@ const speedValue = document.getElementById("speedValue");
 const themeToggle = document.getElementById("themeToggle");
 
 // Buttons
+const prevBtn = document.getElementById("prevBtn");
 const nextBtn = document.getElementById("nextBtn");
 const playBtn = document.getElementById("playBtn");
 const randomBtn = document.getElementById("randomBtn");
@@ -515,14 +519,42 @@ const togglePinyin = document.getElementById("togglePinyin");
 const toggleEnglish = document.getElementById("toggleEnglish");
 const toggleAuto = document.getElementById("toggleAuto");
 
-// Initialize
+// Initialize app with loading simulation
 function init() {
+  simulateLoading();
+}
+
+// Simulate loading process
+function simulateLoading() {
+  let progress = 0;
+  const interval = setInterval(() => {
+    progress += Math.random() * 15;
+    if (progress >= 100) {
+      progress = 100;
+      clearInterval(interval);
+      setTimeout(completeLoading, 500);
+    }
+    loadingBar.style.width = `${progress}%`;
+  }, 200);
+}
+
+function completeLoading() {
+  loadingScreen.style.opacity = "0";
+  setTimeout(() => {
+    loadingScreen.style.display = "none";
+    appContent.style.display = "block";
+    setupApp();
+  }, 500);
+}
+
+function setupApp() {
   loadThemePreference();
   updateDisplay();
   setupEventListeners();
 }
 
 function setupEventListeners() {
+  prevBtn.addEventListener("click", prevDialogue);
   nextBtn.addEventListener("click", nextDialogue);
   playBtn.addEventListener("click", playAudio);
   randomBtn.addEventListener("click", randomDialogue);
@@ -536,6 +568,16 @@ function setupEventListeners() {
   toggleAuto.addEventListener("click", toggleAutoReveal);
 
   speedSlider.addEventListener("input", updateSpeechRate);
+}
+
+function prevDialogue() {
+  if (currentIndex > 0) {
+    currentIndex--;
+  } else {
+    currentIndex = dialogues.length - 1; // Loop to last dialogue
+  }
+  visited.add(currentIndex);
+  updateDisplay();
 }
 
 function nextDialogue() {
@@ -579,6 +621,14 @@ function updateDisplay() {
   const progress = (visited.size / dialogues.length) * 100;
   progressText.textContent = `Progress: ${visited.size}/${dialogues.length}`;
   progressFill.style.width = `${progress}%`;
+
+  // Update button states
+  updateButtonStates();
+}
+
+function updateButtonStates() {
+  // Enable/disable previous button based on current index
+  prevBtn.disabled = currentIndex === 0;
 }
 
 function updatePreview() {
