@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HSK1 Listening Practice</title>
+    <link rel="stylesheet" href="./css/styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="main-card">
+        <h1>
+          HSK 1 Listening Practice
+          <button class="theme-toggle" id="themeToggle">🌙</button>
+        </h1>
+        <div class="subtitle">
+          Practice your Chinese listening skills with these HSK 1 dialogues
+        </div>
+        <div class="lesson-info" id="lessonInfo">Click Next to start</div>
+
+        <div class="controls">
+          <button class="btn" id="nextBtn">Next Dialogue</button>
+          <button class="btn" id="playBtn">Play Audio</button>
+          <button class="btn ghost" id="randomBtn">Random</button>
+        </div>
+
+        <div class="dialogue-card">
+          <div class="dialogue-line">
+            <span class="speaker">A:</span>
+            <span id="lineA">Click Next to load a dialogue</span>
+          </div>
+          <div class="dialogue-line">
+            <span class="speaker">B:</span> <span id="lineB"></span>
+          </div>
+        </div>
+
+        <div class="audio-controls">
+          <div class="control-label">Speech Speed</div>
+          <div class="speed-control">
+            <span class="speed-value" id="speedValue">0.8x</span>
+            <input
+              type="range"
+              min="0.5"
+              max="1.5"
+              step="0.1"
+              value="0.8"
+              class="speed-slider"
+              id="speedSlider"
+            />
+          </div>
+        </div>
+
+        <div class="progress">
+          <div class="progress-text" id="progressText">Progress: 0/10</div>
+          <div class="progress-bar">
+            <div
+              class="progress-fill"
+              id="progressFill"
+              style="width: 0%"
+            ></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar">
+        <h3>Display Options</h3>
+
+        <div class="toggle-group">
+          <div class="toggle active" id="toggleHanzi">Hanzi</div>
+          <div class="toggle" id="togglePinyin">Pinyin</div>
+          <div class="toggle" id="toggleEnglish">English</div>
+        </div>
+
+        <div class="toggle-group">
+          <div class="toggle" id="toggleAuto">Auto Reveal</div>
+        </div>
+
+        <div class="preview" id="preview">
+          <div class="preview-placeholder">Preview will appear here</div>
+        </div>
+
+        <button class="btn ghost" id="revealBtn">Reveal All</button>
+        <button class="btn" id="copyBtn">Copy Dialogue</button>
+      </div>
+    </div>
+
+    <script src="./js/script.js"></script>
+  </body>
+</html>
