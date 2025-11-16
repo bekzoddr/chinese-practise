@@ -1,4 +1,4 @@
-// Sample dialogues data
+// Listening Practice functionality
 const dialogues = [
   {
     lesson: "Lesson 1: Greetings",
@@ -27,8 +27,6 @@ const dialogues = [
     englishA: "Sorry!",
     englishB: "No problem!",
   },
-
-  // Lesson 2
   {
     lesson: "Lesson 2: Thanks",
     hanziA: "谢谢！",
@@ -56,8 +54,6 @@ const dialogues = [
     englishA: "Goodbye!",
     englishB: "Goodbye!",
   },
-
-  // Lesson 3
   {
     lesson: "Lesson 3: Names",
     hanziA: "你叫什么名字？",
@@ -85,8 +81,6 @@ const dialogues = [
     englishA: "Are you Chinese?",
     englishB: "I'm not Chinese, I'm American.",
   },
-
-  // Lesson 4
   {
     lesson: "Lesson 4: Introduction",
     hanziA: "她是我的汉语老师。",
@@ -114,8 +108,6 @@ const dialogues = [
     englishA: "Who is he?",
     englishB: "He is my classmate. She is not my classmate, she is my friend.",
   },
-
-  // Lesson 5
   {
     lesson: "Lesson 5: Family Size",
     hanziA: "你家有几口人？",
@@ -143,8 +135,6 @@ const dialogues = [
     englishA: "How old is Teacher Li?",
     englishB: "She is 50 years old this year. Her daughter is 20 years old.",
   },
-
-  // Lesson 6
   {
     lesson: "Lesson 6: Language Ability",
     hanziA: "你会说汉语吗？",
@@ -176,8 +166,6 @@ const dialogues = [
     englishB:
       "I can write. How to write this character? Sorry, I can read this character but cannot write it.",
   },
-
-  // Lesson 7
   {
     lesson: "Lesson 7: Dates",
     hanziA: "请问，今天几号？",
@@ -208,8 +196,6 @@ const dialogues = [
     englishB:
       "I am going to school. What will you do at school? I will read books at school.",
   },
-
-  // Lesson 8
   {
     lesson: "Lesson 8: Eating & Drinking",
     hanziA: "你想喝什么？",
@@ -240,8 +226,6 @@ const dialogues = [
     englishA: "Hello! How much is this cup?",
     englishB: "28 kuai. That cup is 18 kuai.",
   },
-
-  // Lesson 9
   {
     lesson: "Lesson 9: Pets & Locations",
     hanziA: "小猫在哪儿？",
@@ -271,8 +255,6 @@ const dialogues = [
     englishA: "Is your father at home?",
     englishB: "He is not at home. Where is he? He is at the hospital.",
   },
-
-  // Lesson 10
   {
     lesson: "Lesson 10: Office Items",
     hanziA: "桌子上有什么？",
@@ -304,8 +286,6 @@ const dialogues = [
     englishA: "Is there anyone here?",
     englishB: "No. Can I sit here? Please sit.",
   },
-
-  // Lesson 11
   {
     lesson: "Lesson 11: Time Now",
     hanziA: "现在几点？",
@@ -338,8 +318,6 @@ const dialogues = [
       "I will go to Beijing on Monday. How many days do you want to stay in Beijing?",
     englishB: "Stay three days. Can you return home before Friday? Yes.",
   },
-
-  // Lesson 12
   {
     lesson: "Lesson 12: Weather Past/Future",
     hanziA: "昨天北京的天气怎么样？",
@@ -373,8 +351,6 @@ const dialogues = [
     englishB:
       "My health is not very good. The weather is too hot, I don't like to eat. You should eat more fruit and drink more water. Thank you, doctor.",
   },
-
-  // Lesson 13
   {
     lesson: "Lesson 13: Current Activities",
     hanziA: "喂，你在做什么呢？",
@@ -410,8 +386,6 @@ const dialogues = [
     englishB:
       "No. Her phone number is 82304156. Okay, I will call her now. She is working, you should call in the afternoon.",
   },
-
-  // Lesson 14
   {
     lesson: "Lesson 14: Shopping",
     hanziA: "昨天上午你去哪儿了？",
@@ -445,8 +419,6 @@ const dialogues = [
     englishB:
       "Yes, she bought quite a few clothes. I didn't buy anything, these are all Wang Fang's things.",
   },
-
-  // Lesson 15
   {
     lesson: "Lesson 15: Meeting & Memory",
     hanziA: "你和李小姐是什么时候认识的？",
@@ -496,6 +468,7 @@ const loadingScreen = document.getElementById("loadingScreen");
 const appContent = document.getElementById("appContent");
 const loadingBar = document.getElementById("loadingBar");
 const lessonInfo = document.getElementById("lessonInfo");
+const lessonCounter = document.getElementById("lessonCounter");
 const lineA = document.getElementById("lineA");
 const lineB = document.getElementById("lineB");
 const progressText = document.getElementById("progressText");
@@ -519,12 +492,11 @@ const togglePinyin = document.getElementById("togglePinyin");
 const toggleEnglish = document.getElementById("toggleEnglish");
 const toggleAuto = document.getElementById("toggleAuto");
 
-// Initialize app with loading simulation
+// Initialize
 function init() {
   simulateLoading();
 }
 
-// Simulate loading process
 function simulateLoading() {
   let progress = 0;
   const interval = setInterval(() => {
@@ -551,6 +523,7 @@ function setupApp() {
   loadThemePreference();
   updateDisplay();
   setupEventListeners();
+  addActivity("🎧", "Started listening practice", "Just now");
 }
 
 function setupEventListeners() {
@@ -574,16 +547,18 @@ function prevDialogue() {
   if (currentIndex > 0) {
     currentIndex--;
   } else {
-    currentIndex = dialogues.length - 1; // Loop to last dialogue
+    currentIndex = dialogues.length - 1;
   }
   visited.add(currentIndex);
   updateDisplay();
+  saveProgress();
 }
 
 function nextDialogue() {
   currentIndex = (currentIndex + 1) % dialogues.length;
   visited.add(currentIndex);
   updateDisplay();
+  saveProgress();
 }
 
 function randomDialogue() {
@@ -595,6 +570,7 @@ function randomDialogue() {
   currentIndex = newIndex;
   visited.add(currentIndex);
   updateDisplay();
+  saveProgress();
 }
 
 function updateDisplay() {
@@ -602,6 +578,9 @@ function updateDisplay() {
 
   // Update main display
   lessonInfo.textContent = dialogue.lesson;
+  lessonCounter.textContent = `Dialogue ${currentIndex + 1} of ${
+    dialogues.length
+  }`;
 
   if (showHanzi) {
     lineA.textContent = dialogue.hanziA;
@@ -627,7 +606,6 @@ function updateDisplay() {
 }
 
 function updateButtonStates() {
-  // Enable/disable previous button based on current index
   prevBtn.disabled = currentIndex === 0;
 }
 
@@ -658,7 +636,6 @@ function updatePreview() {
 }
 
 function toggleDisplay(type) {
-  // Reset all toggles
   showHanzi = false;
   showPinyin = false;
   showEnglish = false;
@@ -666,7 +643,6 @@ function toggleDisplay(type) {
   togglePinyin.classList.remove("active");
   toggleEnglish.classList.remove("active");
 
-  // Set the selected one
   switch (type) {
     case "hanzi":
       showHanzi = true;
@@ -700,7 +676,6 @@ function playAudio() {
   const textToSpeak = `${dialogue.hanziA} ${dialogue.hanziB}`;
 
   if ("speechSynthesis" in window) {
-    // Cancel any ongoing speech
     speechSynthesis.cancel();
 
     const utterance = new SpeechSynthesisUtterance(textToSpeak);
@@ -714,6 +689,7 @@ function playAudio() {
     };
 
     speechSynthesis.speak(utterance);
+    addActivity("🔊", "Played dialogue audio", "Just now");
   } else {
     alert("Text-to-speech not supported in your browser");
   }
@@ -753,6 +729,29 @@ B: ${dialogue.englishB}`;
       copyBtn.textContent = originalText;
     }, 2000);
   });
+  addActivity("📋", "Copied dialogue to clipboard", "Just now");
+}
+
+function saveProgress() {
+  const progress = Math.round((visited.size / dialogues.length) * 100);
+  localStorage.setItem("listeningProgress", progress.toString());
+
+  // Update study time
+  const currentTime = parseInt(localStorage.getItem("totalStudyTime") || "0");
+  localStorage.setItem("totalStudyTime", (currentTime + 1).toString());
+}
+
+function addActivity(icon, description, time) {
+  const activities = JSON.parse(
+    localStorage.getItem("recentActivities") || "[]"
+  );
+  activities.unshift({ icon, description, time });
+
+  if (activities.length > 5) {
+    activities.pop();
+  }
+
+  localStorage.setItem("recentActivities", JSON.stringify(activities));
 }
 
 function toggleTheme() {
@@ -771,5 +770,5 @@ function loadThemePreference() {
   }
 }
 
-// Start the app
-init();
+// Initialize when page loads
+document.addEventListener("DOMContentLoaded", init);

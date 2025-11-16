@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HSK 1 Vocabulary</title>
+    <link rel="stylesheet" href="../css/styles.css" />
+    <link rel="stylesheet" href="../css/vocabulary.css" />
+  </head>
+  <body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+      <div class="loading-content">
+        <div class="loading-spinner"></div>
+        <h2>Loading HSK 1 Vocabulary</h2>
+        <p>Preparing vocabulary materials...</p>
+        <div class="loading-progress">
+          <div class="loading-bar" id="loadingBar"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main App Content -->
+    <div class="app-content" id="appContent" style="display: none">
+      <div class="nav-header">
+        <div class="nav-header-links">
+          <a href="../index.html" class="nav-back">← Back to Dashboard</a>
+          <br />
+          <a href="../pages/listening.html" class="nav-back"
+            >← Practise your listening</a
+          >
+        </div>
+        <h1>HSK 1 Vocabulary</h1>
+        <button class="theme-toggle" id="themeToggle">🌙</button>
+      </div>
+
+      <div class="container">
+        <div class="main-card">
+          <div class="subtitle">Master all 150 essential HSK 1 words</div>
+
+          <!-- Controls -->
+          <div class="vocab-controls">
+            <div class="search-box">
+              <input
+                type="text"
+                id="searchInput"
+                placeholder="Search vocabulary..."
+              />
+              <button class="btn ghost" id="clearSearch">Clear</button>
+            </div>
+            <div class="filter-controls">
+              <select id="categoryFilter">
+                <option value="all">All Categories</option>
+                <option value="pronouns">People & Pronouns</option>
+                <option value="questions">Question Words</option>
+                <option value="numbers">Numbers</option>
+                <option value="measure">Measure Words</option>
+                <option value="time">Time Words</option>
+                <option value="places">Places</option>
+                <option value="transport">Transportation</option>
+                <option value="food">Food & Drinks</option>
+                <option value="objects">Daily Objects</option>
+                <option value="animals">Animals</option>
+                <option value="verbs">Verbs</option>
+                <option value="adjectives">Adjectives</option>
+                <option value="locations">Location Words</option>
+                <option value="particles">Particles</option>
+                <option value="other">Other Words</option>
+              </select>
+              <button class="btn" id="shuffleBtn">Shuffle</button>
+              <button class="btn ghost" id="togglePinyinBtn">
+                Hide Pinyin
+              </button>
+            </div>
+          </div>
+
+          <!-- Progress Stats -->
+          <div class="progress-stats">
+            <div class="stat-card">
+              <div class="stat-number" id="totalWords">150</div>
+              <div class="stat-label">Total Words</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number" id="masteredWords">0</div>
+              <div class="stat-label">Mastered</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number" id="reviewWords">0</div>
+              <div class="stat-label">Need Review</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number" id="studiedWords">0</div>
+              <div class="stat-label">Studied</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vocabulary Grid -->
+        <div class="main-card">
+          <h3>Vocabulary List</h3>
+          <div class="vocabulary-grid" id="vocabularyGrid">
+            <!-- Vocabulary cards will be generated here -->
+          </div>
+        </div>
+
+        <!-- Practice Mode -->
+        <div class="main-card">
+          <h3>Practice Mode</h3>
+          <div class="practice-controls">
+            <button class="btn" id="startPractice">Start Practice</button>
+            <button class="btn ghost" id="flashcardsBtn">Flashcards</button>
+            <button class="btn ghost" id="quizBtn">Take Quiz</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Flashcard Modal -->
+    <div class="modal" id="flashcardModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Flashcards</h3>
+          <button class="close-modal" id="closeFlashcard">&times;</button>
+        </div>
+        <div class="flashcard" id="flashcard">
+          <div class="flashcard-front">
+            <div class="flashcard-hanzi" id="flashcardHanzi">你好</div>
+          </div>
+          <div class="flashcard-back">
+            <div class="flashcard-pinyin" id="flashcardPinyin">Nǐ hǎo</div>
+            <div class="flashcard-meaning" id="flashcardMeaning">Hello</div>
+          </div>
+        </div>
+        <div class="flashcard-controls">
+          <button class="btn ghost" id="prevCard">Previous</button>
+          <button class="btn" id="flipCard">Flip</button>
+          <button class="btn" id="nextCard">Next</button>
+          <button class="btn ghost" id="markMastered">Mark Mastered</button>
+        </div>
+        <div class="flashcard-progress">
+          <span id="cardProgress">1/150</span>
+        </div>
+      </div>
+    </div>
+
+    <script src="../js/vocabulary.js"></script>
+    <script src="../js/dashboard.js"></script>
+  </body>
+</html>

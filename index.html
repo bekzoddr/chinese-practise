@@ -3,16 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HSK1 Listening Practice</title>
+    <title>HSK 1 Learning Center</title>
     <link rel="stylesheet" href="./css/styles.css" />
+    <link rel="stylesheet" href="" />
   </head>
   <body>
     <!-- Loading Screen -->
     <div class="loading-screen" id="loadingScreen">
       <div class="loading-content">
         <div class="loading-spinner"></div>
-        <h2>Loading HSK1 Practice</h2>
-        <p>Preparing your learning materials...</p>
+        <h2>Loading HSK 1 Learning Center</h2>
+        <p>Preparing your learning journey...</p>
         <div class="loading-progress">
           <div class="loading-bar" id="loadingBar"></div>
         </div>
@@ -22,84 +23,176 @@
     <!-- Main App Content -->
     <div class="app-content" id="appContent" style="display: none">
       <div class="container">
+        <!-- Header Section -->
         <div class="main-card">
           <h1>
-            HSK 1 Listening Practice
+            HSK 1 Learning Center
             <button class="theme-toggle" id="themeToggle">🌙</button>
           </h1>
           <div class="subtitle">
-            Practice your Chinese listening skills with these HSK 1 dialogues
+            Master Chinese with interactive HSK 1 learning tools
           </div>
-          <div class="lesson-info" id="lessonInfo">Click Next to start</div>
+        </div>
 
-          <div class="controls">
-            <button class="btn" id="prevBtn">Previous</button>
-            <button class="btn" id="nextBtn">Next Dialogue</button>
-            <button class="btn" id="playBtn">Play Audio</button>
-            <button class="btn ghost" id="randomBtn">Random</button>
-          </div>
-
-          <div class="dialogue-card">
-            <div class="dialogue-line">
-              <span class="speaker">A:</span>
-              <span id="lineA">Click Next to load a dialogue</span>
+        <!-- Quick Stats -->
+        <div class="main-card">
+          <h3>Your Progress Overview</h3>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon">🎧</div>
+              <div class="stat-content">
+                <div class="stat-number" id="listeningProgress">0%</div>
+                <div class="stat-label">Listening Completed</div>
+              </div>
             </div>
-            <div class="dialogue-line">
-              <span class="speaker">B:</span> <span id="lineB"></span>
+            <div class="stat-card">
+              <div class="stat-icon">📚</div>
+              <div class="stat-content">
+                <div class="stat-number" id="vocabMastered">0</div>
+                <div class="stat-label">Words Mastered</div>
+              </div>
             </div>
-          </div>
-
-          <div class="audio-controls">
-            <div class="control-label">Speech Speed</div>
-            <div class="speed-control">
-              <span class="speed-value" id="speedValue">0.8x</span>
-              <input
-                type="range"
-                min="0.5"
-                max="1.5"
-                step="0.1"
-                value="0.8"
-                class="speed-slider"
-                id="speedSlider"
-              />
+            <div class="stat-card">
+              <div class="stat-icon">⏱️</div>
+              <div class="stat-content">
+                <div class="stat-number" id="studyTime">0min</div>
+                <div class="stat-label">Study Time</div>
+              </div>
             </div>
-          </div>
-
-          <div class="progress">
-            <div class="progress-text" id="progressText">Progress: 0/10</div>
-            <div class="progress-bar">
-              <div
-                class="progress-fill"
-                id="progressFill"
-                style="width: 0%"
-              ></div>
+            <div class="stat-card">
+              <div class="stat-icon">📈</div>
+              <div class="stat-content">
+                <div class="stat-number" id="streakCount">0</div>
+                <div class="stat-label">Day Streak</div>
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="sidebar">
-          <h3>Display Options</h3>
+        <!-- Learning Modules -->
+        <div class="main-card">
+          <h3>Learning Modules</h3>
+          <div class="modules-grid">
+            <div
+              class="module-card"
+              onclick="location.href='./pages/listening.html'"
+            >
+              <div class="module-icon">🎧</div>
+              <div class="module-content">
+                <h4>Listening Practice</h4>
+                <p>
+                  Practice your listening skills with HSK 1 dialogues and audio
+                  exercises
+                </p>
+                <div class="module-progress">
+                  <div class="progress-bar">
+                    <div
+                      class="progress-fill"
+                      id="listeningBar"
+                      style="width: 0%"
+                    ></div>
+                  </div>
+                  <span id="listeningText">0% complete</span>
+                </div>
+              </div>
+              <div class="module-arrow">→</div>
+            </div>
 
-          <div class="toggle-group">
-            <div class="toggle active" id="toggleHanzi">Hanzi</div>
-            <div class="toggle" id="togglePinyin">Pinyin</div>
-            <div class="toggle" id="toggleEnglish">English</div>
+            <div
+              class="module-card"
+              onclick="location.href='./pages/vocabulary.html'"
+            >
+              <div class="module-icon">📚</div>
+              <div class="module-content">
+                <h4>Vocabulary Builder</h4>
+                <p>
+                  Master all 150 HSK 1 words with flashcards and interactive
+                  exercises
+                </p>
+                <div class="module-progress">
+                  <div class="progress-bar">
+                    <div
+                      class="progress-fill"
+                      id="vocabBar"
+                      style="width: 0%"
+                    ></div>
+                  </div>
+                  <span id="vocabText">0/150 words</span>
+                </div>
+              </div>
+              <div class="module-arrow">→</div>
+            </div>
+
+            <div class="module-card" onclick="startQuickQuiz()">
+              <div class="module-icon">🧠</div>
+              <div class="module-content">
+                <h4>Quick Quiz</h4>
+                <p>
+                  Test your knowledge with interactive quizzes and track your
+                  progress
+                </p>
+                <div class="module-stats">
+                  <span id="quizScore">Last score: --</span>
+                </div>
+              </div>
+              <div class="module-arrow">→</div>
+            </div>
+
+            <div class="module-card" onclick="showGrammarGuide()">
+              <div class="module-icon">📝</div>
+              <div class="module-content">
+                <h4>Grammar Guide</h4>
+                <p>
+                  Learn essential HSK 1 grammar patterns and sentence structures
+                </p>
+                <div class="module-stats">
+                  <span>15 lessons available</span>
+                </div>
+              </div>
+              <div class="module-arrow">→</div>
+            </div>
           </div>
+        </div>
 
-          <div class="toggle-group">
-            <div class="toggle" id="toggleAuto">Auto Reveal</div>
+        <!-- Quick Actions -->
+        <div class="main-card">
+          <h3>Quick Practice Sessions</h3>
+          <div class="action-buttons">
+            <button class="btn" onclick="startDailyReview()">
+              <span class="btn-icon">📖</span>
+              Daily Review
+            </button>
+            <button class="btn ghost" onclick="startRandomPractice()">
+              <span class="btn-icon">🎯</span>
+              Random Practice
+            </button>
+            <button class="btn ghost" onclick="startFlashcards()">
+              <span class="btn-icon">🃏</span>
+              Flash Cards
+            </button>
+            <button class="btn ghost" onclick="startListeningPractice()">
+              <span class="btn-icon">🎧</span>
+              Quick Listening
+            </button>
           </div>
+        </div>
 
-          <div class="preview" id="preview">
-            <div class="preview-placeholder">Preview will appear here</div>
+        <!-- Recent Activity -->
+        <div class="main-card">
+          <h3>Recent Learning Activity</h3>
+          <div class="activity-list" id="activityList">
+            <div class="activity-item">
+              <div class="activity-icon">🚀</div>
+              <div class="activity-content">
+                <p>Welcome to HSK 1 Learning Center!</p>
+                <span>Start your learning journey today</span>
+              </div>
+            </div>
           </div>
-
-          <button class="btn ghost" id="revealBtn">Reveal All</button>
-          <button class="btn" id="copyBtn">Copy Dialogue</button>
         </div>
       </div>
     </div>
 
-    <script src="./js/script.js"></script>
+    <script src="./js/dashboard.js"></script>
   </body>
 </html>
