@@ -644,10 +644,22 @@ function openFlashcards() {
 
 function closeFlashcards() {
   flashcardModal.classList.remove("active");
+  resetFlashcardFlip();
+}
+
+function resetFlashcardFlip() {
   flashcard.classList.remove("flipped");
 }
 
 function updateFlashcardDisplay() {
+  if (currentVocabulary.length === 0) {
+    flashcardHanzi.textContent = "No words";
+    flashcardPinyin.textContent = "";
+    flashcardMeaning.textContent = "No vocabulary to display";
+    cardProgress.textContent = "0/0";
+    return;
+  }
+
   const word = currentVocabulary[currentFlashcardIndex];
   flashcardHanzi.textContent = word.hanzi;
   flashcardPinyin.textContent = word.pinyin;
@@ -662,7 +674,7 @@ function updateFlashcardDisplay() {
   markMastered.className = isMastered ? "btn ghost" : "btn";
 
   // Reset flip state
-  flashcard.classList.remove("flipped");
+  resetFlashcardFlip();
 }
 
 function flipFlashcard() {
