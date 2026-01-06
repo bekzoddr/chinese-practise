@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HSK 1 Vocabulary</title>
+    <title>HSK Vocabulary</title>
     <link rel="stylesheet" href="../css/styles.css" />
     <link rel="stylesheet" href="../css/vocabulary.css" />
   </head>
@@ -12,7 +12,7 @@
     <div class="loading-screen" id="loadingScreen">
       <div class="loading-content">
         <div class="loading-spinner"></div>
-        <h2>Loading HSK 1 Vocabulary</h2>
+        <h2>Loading HSK Vocabulary</h2>
         <p>Preparing vocabulary materials...</p>
         <div class="loading-progress">
           <div class="loading-bar" id="loadingBar"></div>
@@ -30,13 +30,35 @@
             >← Practise your listening</a
           >
         </div>
-        <h1>HSK 1 Vocabulary</h1>
+        <h1>HSK Vocabulary</h1>
         <button class="theme-toggle" id="themeToggle">🌙</button>
       </div>
 
       <div class="container">
         <div class="main-card">
-          <div class="subtitle">Master all 150 essential HSK 1 words</div>
+          <div class="subtitle">Master essential HSK words from all levels</div>
+
+          <!-- HSK Level Controls -->
+          <div class="hsk-level-controls">
+            <div class="hsk-buttons">
+              <button class="hsk-btn active" data-level="all">All HSK</button>
+              <button class="hsk-btn" data-level="1">HSK 1</button>
+              <button class="hsk-btn" data-level="2">HSK 2</button>
+              <!-- Add more HSK levels as needed -->
+            </div>
+            <div class="sort-controls">
+              <select id="sortFilter">
+                <option value="default">Sort by: Default</option>
+                <option value="alphabetical">A-Z (Hanzi)</option>
+                <option value="alphabetical-reverse">Z-A (Hanzi)</option>
+                <option value="pinyin">A-Z (Pinyin)</option>
+                <option value="pinyin-reverse">Z-A (Pinyin)</option>
+                <option value="category">Category</option>
+                <option value="mastery">Mastery Level</option>
+                <option value="random">Random</option>
+              </select>
+            </div>
+          </div>
 
           <!-- Controls -->
           <div class="vocab-controls">
@@ -51,21 +73,7 @@
             <div class="filter-controls">
               <select id="categoryFilter">
                 <option value="all">All Categories</option>
-                <option value="pronouns">People & Pronouns</option>
-                <option value="questions">Question Words</option>
-                <option value="numbers">Numbers</option>
-                <option value="measure">Measure Words</option>
-                <option value="time">Time Words</option>
-                <option value="places">Places</option>
-                <option value="transport">Transportation</option>
-                <option value="food">Food & Drinks</option>
-                <option value="objects">Daily Objects</option>
-                <option value="animals">Animals</option>
-                <option value="verbs">Verbs</option>
-                <option value="adjectives">Adjectives</option>
-                <option value="locations">Location Words</option>
-                <option value="particles">Particles</option>
-                <option value="other">Other Words</option>
+                <!-- Categories will be populated dynamically -->
               </select>
               <button class="btn" id="shuffleBtn">Shuffle</button>
               <button class="btn ghost" id="togglePinyinBtn">
@@ -77,7 +85,7 @@
           <!-- Progress Stats -->
           <div class="progress-stats">
             <div class="stat-card">
-              <div class="stat-number" id="totalWords">150</div>
+              <div class="stat-number" id="totalWords">0</div>
               <div class="stat-label">Total Words</div>
             </div>
             <div class="stat-card">
@@ -91,6 +99,10 @@
             <div class="stat-card">
               <div class="stat-number" id="studiedWords">0</div>
               <div class="stat-label">Studied</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number" id="currentLevel">HSK 1</div>
+              <div class="stat-label">Current Level</div>
             </div>
           </div>
         </div>
@@ -127,10 +139,14 @@
             <div class="flashcard-inner">
               <div class="flashcard-front">
                 <div class="flashcard-hanzi" id="flashcardHanzi">你好</div>
+                <div class="flashcard-level" id="flashcardLevel">HSK 1</div>
               </div>
               <div class="flashcard-back">
                 <div class="flashcard-pinyin" id="flashcardPinyin">Nǐ hǎo</div>
                 <div class="flashcard-meaning" id="flashcardMeaning">Hello</div>
+                <div class="flashcard-category" id="flashcardCategory">
+                  Greeting
+                </div>
               </div>
             </div>
           </div>
@@ -142,7 +158,8 @@
           <button class="btn ghost" id="markMastered">Mark Mastered</button>
         </div>
         <div class="flashcard-progress">
-          <span id="cardProgress">1/150</span>
+          <span id="cardProgress">1/0</span>
+          <span id="cardLevelInfo">HSK 1</span>
         </div>
       </div>
     </div>
