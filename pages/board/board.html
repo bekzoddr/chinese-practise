@@ -1,0 +1,1563 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chinese Writing Board - Word Recognition</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        color: #333;
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+      }
+
+      header {
+        text-align: center;
+        padding: 20px;
+        background: linear-gradient(to right, #2c3e50, #4a6491);
+        color: white;
+        border-radius: 15px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        background: linear-gradient(to right, #ffd700, #ffec8b);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      .subtitle {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .pleco-badge {
+        display: inline-block;
+        background: #ff6b6b;
+        color: white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        margin-top: 10px;
+        font-weight: bold;
+      }
+
+      .main-content {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 25px;
+      }
+
+      .writing-section {
+        flex: 1;
+        min-width: 350px;
+        background-color: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+      }
+
+      .info-section {
+        flex: 1;
+        min-width: 350px;
+        background-color: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+      }
+
+      .section-title {
+        font-size: 1.4rem;
+        color: #2c3e50;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #eaeaea;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .section-title i {
+        color: #4a6491;
+      }
+
+      .canvas-container {
+        position: relative;
+        width: 100%;
+        height: 350px;
+        border: 2px solid #ddd;
+        border-radius: 10px;
+        background-color: #f9f9f9;
+        overflow: hidden;
+      }
+
+      #writingBoard {
+        width: 100%;
+        height: 100%;
+        cursor: crosshair;
+        touch-action: none;
+      }
+
+      .recognition-feedback {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 10px 15px;
+        border-radius: 10px;
+        font-size: 1.2rem;
+        display: none;
+        font-family: "SimSun", "STSong", serif;
+      }
+
+      .board-controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-top: 20px;
+        justify-content: center;
+      }
+
+      button {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .clear-btn {
+        background-color: #e74c3c;
+        color: white;
+      }
+
+      .clear-btn:hover {
+        background-color: #c0392b;
+        transform: translateY(-3px);
+      }
+
+      .undo-btn {
+        background-color: #f39c12;
+        color: white;
+      }
+
+      .undo-btn:hover {
+        background-color: #d68910;
+        transform: translateY(-3px);
+      }
+
+      .word-mode-btn {
+        background-color: #9b59b6;
+        color: white;
+      }
+
+      .word-mode-btn:hover {
+        background-color: #8e44ad;
+        transform: translateY(-3px);
+      }
+
+      .mode-indicator {
+        display: inline-block;
+        padding: 5px 10px;
+        background: #3498db;
+        color: white;
+        border-radius: 5px;
+        font-size: 0.9rem;
+        margin-left: 10px;
+      }
+
+      .stroke-controls {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-top: 20px;
+        padding: 15px;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+      }
+
+      .stroke-color {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 3px solid white;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+      }
+
+      .stroke-slider {
+        flex-grow: 1;
+      }
+
+      .stroke-slider input {
+        width: 100%;
+      }
+
+      .character-display {
+        font-size: 4rem;
+        margin: 20px 0;
+        font-family: "SimSun", "STSong", serif;
+        color: #2c3e50;
+        text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        min-height: 80px;
+        line-height: 1.2;
+      }
+
+      .word-display {
+        font-size: 3.5rem;
+        margin: 15px 0;
+        font-family: "SimSun", "STSong", serif;
+        color: #2c3e50;
+        text-align: center;
+        line-height: 1.3;
+      }
+
+      .pinyin {
+        font-size: 2rem;
+        color: #e74c3c;
+        margin-bottom: 10px;
+        font-weight: 600;
+        text-align: center;
+      }
+
+      .meaning {
+        font-size: 1.5rem;
+        color: #2c3e50;
+        margin-bottom: 15px;
+        text-align: center;
+      }
+
+      .details {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-top: 15px;
+      }
+
+      .detail-card {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 10px;
+        border-left: 4px solid #4a6491;
+      }
+
+      .detail-title {
+        font-weight: 600;
+        color: #4a6491;
+        margin-bottom: 5px;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .detail-content {
+        font-size: 1.1rem;
+        color: #333;
+      }
+
+      .stroke-order {
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 2px solid #eaeaea;
+      }
+
+      .stroke-order-title {
+        font-size: 1.3rem;
+        margin-bottom: 15px;
+        color: #2c3e50;
+      }
+
+      .stroke-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+      }
+
+      .stroke-step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 70px;
+      }
+
+      .stroke-number {
+        width: 30px;
+        height: 30px;
+        background-color: #3498db;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      .stroke-char {
+        font-size: 2rem;
+        font-family: "SimSun", "STSong", serif;
+      }
+
+      .suggestions-section {
+        margin-top: 30px;
+      }
+
+      .suggestions-title {
+        font-size: 1.3rem;
+        margin-bottom: 15px;
+        color: #2c3e50;
+      }
+
+      .suggestions-list {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      @media (min-width: 768px) {
+        .suggestions-list {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      .suggestion-item {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+        border: 2px solid #ddd;
+      }
+
+      .suggestion-item:hover {
+        transform: translateY(-3px);
+        border-color: #3498db;
+        box-shadow: 0 5px 10px rgba(52, 152, 219, 0.2);
+      }
+
+      .suggestion-char {
+        font-size: 2rem;
+        font-family: "SimSun", "STSong", serif;
+        margin-bottom: 5px;
+      }
+
+      .suggestion-pinyin {
+        font-size: 0.9rem;
+        color: #e74c3c;
+        font-weight: 600;
+      }
+
+      .suggestion-meaning {
+        font-size: 0.8rem;
+        color: #666;
+      }
+
+      .word-suggestions {
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 2px solid #eaeaea;
+      }
+
+      .word-suggestions-title {
+        font-size: 1.3rem;
+        margin-bottom: 15px;
+        color: #2c3e50;
+      }
+
+      .word-suggestions-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 10px;
+      }
+
+      .word-suggestion-item {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+        border: 2px solid #9b59b6;
+      }
+
+      .word-suggestion-item:hover {
+        transform: translateY(-3px);
+        border-color: #3498db;
+        box-shadow: 0 5px 10px rgba(52, 152, 219, 0.2);
+      }
+
+      .word-suggestion-chars {
+        font-size: 1.8rem;
+        font-family: "SimSun", "STSong", serif;
+        margin-bottom: 5px;
+      }
+
+      .word-suggestion-pinyin {
+        font-size: 0.9rem;
+        color: #e74c3c;
+        font-weight: 600;
+      }
+
+      .word-suggestion-meaning {
+        font-size: 0.8rem;
+        color: #666;
+      }
+
+      footer {
+        text-align: center;
+        margin-top: 20px;
+        padding: 20px;
+        color: #7f8c8d;
+        font-size: 0.9rem;
+      }
+
+      @media (max-width: 768px) {
+        .main-content {
+          flex-direction: column;
+        }
+
+        h1 {
+          font-size: 2rem;
+        }
+
+        .character-display {
+          font-size: 3rem;
+        }
+
+        .word-display {
+          font-size: 2.5rem;
+        }
+      }
+
+      .drawing-instruction {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 10px;
+        margin-top: 15px;
+        font-size: 0.9rem;
+        color: #666;
+        text-align: center;
+      }
+
+      .mode-toggle {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 15px;
+      }
+
+      .mode-btn {
+        padding: 8px 16px;
+        background: #ecf0f1;
+        border: 2px solid #bdc3c7;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .mode-btn.active {
+        background: #3498db;
+        color: white;
+        border-color: #2980b9;
+      }
+
+      .character-counter {
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+        background: rgba(52, 152, 219, 0.9);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 0.9rem;
+      }
+
+      .word-info {
+        background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        padding: 15px;
+        border-radius: 10px;
+        margin-top: 15px;
+      }
+
+      .example-sentences {
+        margin-top: 20px;
+        padding: 15px;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+      }
+
+      .example-title {
+        font-size: 1.1rem;
+        color: #2c3e50;
+        margin-bottom: 10px;
+        font-weight: 600;
+      }
+
+      .example-item {
+        margin-bottom: 10px;
+        padding: 8px;
+        border-left: 3px solid #3498db;
+        background: white;
+        border-radius: 0 5px 5px 0;
+      }
+
+      .example-chinese {
+        font-family: "SimSun", "STSong", serif;
+        font-size: 1.1rem;
+        margin-bottom: 3px;
+      }
+
+      .example-pinyin {
+        font-size: 0.9rem;
+        color: #e74c3c;
+        font-style: italic;
+        margin-bottom: 3px;
+      }
+
+      .example-translation {
+        font-size: 0.9rem;
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1><i class="fas fa-pen-fancy"></i> Chinese Word Recognition</h1>
+        <p class="subtitle">
+          Draw Chinese characters and words - Get pinyin, English meanings, and
+          example sentences
+        </p>
+        <div class="pleco-badge">Multi-character Word Recognition</div>
+      </header>
+
+      <div class="main-content">
+        <div class="writing-section">
+          <h2 class="section-title">
+            <i class="fas fa-paint-brush"></i> Writing Board
+            <div class="mode-indicator" id="modeIndicator">Character Mode</div>
+          </h2>
+
+          <div class="mode-toggle">
+            <div class="mode-btn active" id="charModeBtn">Single Character</div>
+            <div class="mode-btn" id="wordModeBtn">Multi-character Word</div>
+          </div>
+
+          <div class="canvas-container">
+            <canvas id="writingBoard"></canvas>
+            <div class="recognition-feedback" id="recognitionFeedback"></div>
+            <div class="character-counter" id="characterCounter">
+              Character 1 of ?
+            </div>
+          </div>
+
+          <div class="drawing-instruction">
+            <i class="fas fa-info-circle"></i>
+            <span id="instructionText"
+              >Draw one character at a time. Space between characters.</span
+            >
+          </div>
+
+          <div class="stroke-controls">
+            <div
+              class="stroke-color"
+              id="colorBlack"
+              style="background-color: #000000"
+            ></div>
+            <div
+              class="stroke-color"
+              id="colorBlue"
+              style="background-color: #3498db"
+            ></div>
+            <div
+              class="stroke-color"
+              id="colorRed"
+              style="background-color: #e74c3c"
+            ></div>
+
+            <div class="stroke-slider">
+              <label for="strokeWidth"
+                >Stroke Width: <span id="strokeWidthValue">5</span>px</label
+              >
+              <input type="range" id="strokeWidth" min="1" max="20" value="5" />
+            </div>
+          </div>
+
+          <div class="board-controls">
+            <button class="clear-btn" id="clearBoard">
+              <i class="fas fa-eraser"></i> Clear All
+            </button>
+            <button class="undo-btn" id="undoBtn">
+              <i class="fas fa-undo"></i> Undo
+            </button>
+            <button class="word-mode-btn" id="nextCharBtn">
+              <i class="fas fa-arrow-right"></i> Next Character
+            </button>
+          </div>
+        </div>
+
+        <div class="info-section">
+          <h2 class="section-title">
+            <i class="fas fa-info-circle"></i> Recognition Results
+          </h2>
+
+          <!-- Single Character Display -->
+          <div id="singleCharDisplay">
+            <div class="character-display" id="characterDisplay">?</div>
+            <div class="pinyin" id="pinyinDisplay">
+              Draw a character to begin
+            </div>
+            <div class="meaning" id="meaningDisplay">
+              Draw in the canvas above
+            </div>
+          </div>
+
+          <!-- Multi-character Word Display -->
+          <div id="multiCharDisplay" style="display: none">
+            <div class="word-display" id="wordDisplay">?</div>
+            <div class="pinyin" id="wordPinyinDisplay">---</div>
+            <div class="meaning" id="wordMeaningDisplay">---</div>
+
+            <div class="word-info">
+              <div class="details">
+                <div class="detail-card">
+                  <div class="detail-title">Word Length</div>
+                  <div class="detail-content" id="wordLength">0 characters</div>
+                </div>
+                <div class="detail-card">
+                  <div class="detail-title">HSK Level</div>
+                  <div class="detail-content" id="wordHskLevel">--</div>
+                </div>
+                <div class="detail-card">
+                  <div class="detail-title">Word Type</div>
+                  <div class="detail-content" id="wordType">--</div>
+                </div>
+                <div class="detail-card">
+                  <div class="detail-title">Frequency</div>
+                  <div class="detail-content" id="wordFrequency">--</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="details">
+            <div class="detail-card">
+              <div class="detail-title">Stroke Count</div>
+              <div class="detail-content" id="strokeCount">0</div>
+            </div>
+            <div class="detail-card">
+              <div class="detail-title">HSK Level</div>
+              <div class="detail-content" id="hskLevel">--</div>
+            </div>
+            <div class="detail-card">
+              <div class="detail-title">Radical</div>
+              <div class="detail-content" id="radicalDisplay">--</div>
+            </div>
+            <div class="detail-card">
+              <div class="detail-title">Character Type</div>
+              <div class="detail-content" id="characterType">--</div>
+            </div>
+          </div>
+
+          <div
+            class="example-sentences"
+            id="exampleSection"
+            style="display: none"
+          >
+            <div class="example-title">Example Sentences</div>
+            <div id="exampleSentences">
+              <!-- Example sentences will appear here -->
+            </div>
+          </div>
+
+          <div class="suggestions-section">
+            <div class="suggestions-title">Character Suggestions</div>
+            <div class="suggestions-list" id="suggestionsList">
+              <!-- Character suggestions will appear here -->
+            </div>
+          </div>
+
+          <div
+            class="word-suggestions"
+            id="wordSuggestionsSection"
+            style="display: none"
+          >
+            <div class="word-suggestions-title">Word Suggestions</div>
+            <div class="word-suggestions-list" id="wordSuggestionsList">
+              <!-- Word suggestions will appear here -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <p>
+          Chinese Word Recognition System &copy; 2023 | Recognizes both single
+          characters and multi-character words
+        </p>
+      </footer>
+    </div>
+
+    <script>
+      // ==================== CANVAS SETUP ====================
+      const canvas = document.getElementById("writingBoard");
+      const ctx = canvas.getContext("2d");
+      let isDrawing = false;
+      let currentStroke = [];
+      let currentCharacterStrokes = [];
+      let allCharacters = [];
+      let currentCharIndex = 0;
+      let mode = "character"; // 'character' or 'word'
+
+      // Set canvas size
+      function resizeCanvas() {
+        const container = canvas.parentElement;
+        canvas.width = container.clientWidth;
+        canvas.height = container.clientHeight;
+
+        // Set initial drawing style
+        ctx.lineWidth = 5;
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        ctx.strokeStyle = "#000000";
+
+        // Clear and set background
+        clearCanvas();
+      }
+
+      // Initialize canvas
+      resizeCanvas();
+      window.addEventListener("resize", resizeCanvas);
+
+      // ==================== DRAWING FUNCTIONS ====================
+      function startDrawing(e) {
+        isDrawing = true;
+        currentStroke = [];
+        const [x, y] = getCoordinates(e);
+        currentStroke.push({ x, y, t: Date.now() });
+        drawPoint(x, y);
+      }
+
+      function draw(e) {
+        if (!isDrawing) return;
+        e.preventDefault();
+
+        const [x, y] = getCoordinates(e);
+        currentStroke.push({ x, y, t: Date.now() });
+
+        // Draw line
+        ctx.beginPath();
+        if (currentStroke.length > 1) {
+          const lastPoint = currentStroke[currentStroke.length - 2];
+          ctx.moveTo(lastPoint.x, lastPoint.y);
+          ctx.lineTo(x, y);
+          ctx.stroke();
+        }
+
+        // Real-time recognition
+        if (currentStroke.length > 3) {
+          recognizeCurrentCharacter();
+        }
+      }
+
+      function stopDrawing() {
+        if (!isDrawing) return;
+        isDrawing = false;
+
+        if (currentStroke.length > 0) {
+          currentCharacterStrokes.push([...currentStroke]);
+
+          // Auto-recognize after short delay
+          setTimeout(() => {
+            recognizeCurrentCharacter();
+          }, 300);
+        }
+      }
+
+      function drawPoint(x, y) {
+        ctx.beginPath();
+        ctx.arc(x, y, ctx.lineWidth / 2, 0, Math.PI * 2);
+        ctx.fillStyle = ctx.strokeStyle;
+        ctx.fill();
+      }
+
+      function getCoordinates(e) {
+        const rect = canvas.getBoundingClientRect();
+        if (e.type.includes("touch")) {
+          const touch = e.touches[0] || e.changedTouches[0];
+          return [touch.clientX - rect.left, touch.clientY - rect.top];
+        } else {
+          return [e.clientX - rect.left, e.clientY - rect.top];
+        }
+      }
+
+      // ==================== CHARACTER DATABASE ====================
+      const characterDB = {
+        你: {
+          pinyin: "nǐ",
+          meaning: "you",
+          strokes: 7,
+          hsk: 1,
+          radical: "亻",
+          type: "Phono-semantic",
+        },
+        好: {
+          pinyin: "hǎo",
+          meaning: "good",
+          strokes: 6,
+          hsk: 1,
+          radical: "女",
+          type: "Ideographic",
+        },
+        吗: {
+          pinyin: "ma",
+          meaning: "question particle",
+          strokes: 6,
+          hsk: 1,
+          radical: "口",
+          type: "Phono-semantic",
+        },
+        我: {
+          pinyin: "wǒ",
+          meaning: "I, me",
+          strokes: 7,
+          hsk: 1,
+          radical: "戈",
+          type: "Ideographic",
+        },
+        是: {
+          pinyin: "shì",
+          meaning: "to be",
+          strokes: 9,
+          hsk: 1,
+          radical: "日",
+          type: "Phono-semantic",
+        },
+        人: {
+          pinyin: "rén",
+          meaning: "person",
+          strokes: 2,
+          hsk: 1,
+          radical: "人",
+          type: "Pictographic",
+        },
+        大: {
+          pinyin: "dà",
+          meaning: "big",
+          strokes: 3,
+          hsk: 1,
+          radical: "大",
+          type: "Pictographic",
+        },
+        中: {
+          pinyin: "zhōng",
+          meaning: "middle",
+          strokes: 4,
+          hsk: 1,
+          radical: "丨",
+          type: "Ideographic",
+        },
+        国: {
+          pinyin: "guó",
+          meaning: "country",
+          strokes: 8,
+          hsk: 1,
+          radical: "囗",
+          type: "Phono-semantic",
+        },
+        学: {
+          pinyin: "xué",
+          meaning: "study",
+          strokes: 8,
+          hsk: 1,
+          radical: "子",
+          type: "Phono-semantic",
+        },
+        生: {
+          pinyin: "shēng",
+          meaning: "life, student",
+          strokes: 5,
+          hsk: 1,
+          radical: "生",
+          type: "Pictographic",
+        },
+        谢: {
+          pinyin: "xiè",
+          meaning: "thank",
+          strokes: 12,
+          hsk: 2,
+          radical: "讠",
+          type: "Phono-semantic",
+        },
+        谢: {
+          pinyin: "xiè",
+          meaning: "thank",
+          strokes: 12,
+          hsk: 2,
+          radical: "讠",
+          type: "Phono-semantic",
+        },
+        爱: {
+          pinyin: "ài",
+          meaning: "love",
+          strokes: 10,
+          hsk: 2,
+          radical: "爫",
+          type: "Phono-semantic",
+        },
+        吃: {
+          pinyin: "chī",
+          meaning: "eat",
+          strokes: 6,
+          hsk: 1,
+          radical: "口",
+          type: "Phono-semantic",
+        },
+        饭: {
+          pinyin: "fàn",
+          meaning: "food, meal",
+          strokes: 7,
+          hsk: 1,
+          radical: "饣",
+          type: "Phono-semantic",
+        },
+        水: {
+          pinyin: "shuǐ",
+          meaning: "water",
+          strokes: 4,
+          hsk: 1,
+          radical: "水",
+          type: "Pictographic",
+        },
+        火: {
+          pinyin: "huǒ",
+          meaning: "fire",
+          strokes: 4,
+          hsk: 1,
+          radical: "火",
+          type: "Pictographic",
+        },
+        山: {
+          pinyin: "shān",
+          meaning: "mountain",
+          strokes: 3,
+          hsk: 1,
+          radical: "山",
+          type: "Pictographic",
+        },
+        日: {
+          pinyin: "rì",
+          meaning: "sun, day",
+          strokes: 4,
+          hsk: 1,
+          radical: "日",
+          type: "Pictographic",
+        },
+        月: {
+          pinyin: "yuè",
+          meaning: "moon, month",
+          strokes: 4,
+          hsk: 1,
+          radical: "月",
+          type: "Pictographic",
+        },
+      };
+
+      // ==================== WORD DATABASE ====================
+      const wordDB = {
+        你好: {
+          pinyin: "nǐ hǎo",
+          meaning: "hello, hi",
+          hsk: 1,
+          type: "Greeting",
+          frequency: "Very High",
+          characters: ["你", "好"],
+          examples: [
+            {
+              chinese: "你好吗？",
+              pinyin: "Nǐ hǎo ma?",
+              english: "How are you?",
+            },
+            {
+              chinese: "你好，我是小明。",
+              pinyin: "Nǐ hǎo, wǒ shì Xiǎomíng.",
+              english: "Hello, I am Xiaoming.",
+            },
+          ],
+        },
+        谢谢: {
+          pinyin: "xiè xie",
+          meaning: "thank you, thanks",
+          hsk: 1,
+          type: "Expression",
+          frequency: "Very High",
+          characters: ["谢", "谢"],
+          examples: [
+            {
+              chinese: "谢谢你！",
+              pinyin: "Xièxie nǐ!",
+              english: "Thank you!",
+            },
+            {
+              chinese: "不客气。",
+              pinyin: "Bù kèqì.",
+              english: "You are welcome.",
+            },
+          ],
+        },
+        我爱你: {
+          pinyin: "wǒ ài nǐ",
+          meaning: "I love you",
+          hsk: 2,
+          type: "Expression",
+          frequency: "High",
+          characters: ["我", "爱", "你"],
+          examples: [
+            {
+              chinese: "我爱你，妈妈。",
+              pinyin: "Wǒ ài nǐ, māma.",
+              english: "I love you, mom.",
+            },
+            {
+              chinese: "我也爱你。",
+              pinyin: "Wǒ yě ài nǐ.",
+              english: "I love you too.",
+            },
+          ],
+        },
+        中国: {
+          pinyin: "Zhōng guó",
+          meaning: "China",
+          hsk: 1,
+          type: "Noun",
+          frequency: "High",
+          characters: ["中", "国"],
+          examples: [
+            {
+              chinese: "我是中国人。",
+              pinyin: "Wǒ shì Zhōngguó rén.",
+              english: "I am Chinese.",
+            },
+            {
+              chinese: "中国很大。",
+              pinyin: "Zhōngguó hěn dà.",
+              english: "China is very big.",
+            },
+          ],
+        },
+        学生: {
+          pinyin: "xué sheng",
+          meaning: "student",
+          hsk: 1,
+          type: "Noun",
+          frequency: "High",
+          characters: ["学", "生"],
+          examples: [
+            {
+              chinese: "我是学生。",
+              pinyin: "Wǒ shì xuéshēng.",
+              english: "I am a student.",
+            },
+            {
+              chinese: "学生们在学习。",
+              pinyin: "Xuéshēngmen zài xuéxí.",
+              english: "The students are studying.",
+            },
+          ],
+        },
+        吃饭: {
+          pinyin: "chī fàn",
+          meaning: "to eat, have a meal",
+          hsk: 1,
+          type: "Verb",
+          frequency: "High",
+          characters: ["吃", "饭"],
+          examples: [
+            {
+              chinese: "你吃饭了吗？",
+              pinyin: "Nǐ chīfàn le ma?",
+              english: "Have you eaten?",
+            },
+            {
+              chinese: "我们去吃饭吧。",
+              pinyin: "Wǒmen qù chīfàn ba.",
+              english: "Let's go eat.",
+            },
+          ],
+        },
+        大山: {
+          pinyin: "dà shān",
+          meaning: "big mountain",
+          hsk: 1,
+          type: "Noun",
+          frequency: "Medium",
+          characters: ["大", "山"],
+          examples: [
+            {
+              chinese: "这是一座大山。",
+              pinyin: "Zhè shì yī zuò dà shān.",
+              english: "This is a big mountain.",
+            },
+          ],
+        },
+        日月: {
+          pinyin: "rì yuè",
+          meaning: "sun and moon",
+          hsk: 1,
+          type: "Noun",
+          frequency: "Low",
+          characters: ["日", "月"],
+          examples: [
+            {
+              chinese: "日月同辉。",
+              pinyin: "Rì yuè tóng huī.",
+              english: "The sun and moon shine together.",
+            },
+          ],
+        },
+        水火: {
+          pinyin: "shuǐ huǒ",
+          meaning: "water and fire",
+          hsk: 1,
+          type: "Noun",
+          frequency: "Low",
+          characters: ["水", "火"],
+          examples: [
+            {
+              chinese: "水火不容。",
+              pinyin: "Shuǐ huǒ bù róng.",
+              english: "As incompatible as fire and water.",
+            },
+          ],
+        },
+      };
+
+      // ==================== RECOGNITION FUNCTIONS ====================
+      function recognizeCurrentCharacter() {
+        if (currentCharacterStrokes.length === 0) return;
+
+        // For demo purposes, we'll match based on stroke count and some simple patterns
+        // In a real app, this would use machine learning
+        const strokeCount = currentCharacterStrokes.length;
+
+        // Find characters with similar stroke count
+        const candidates = [];
+        for (const [char, data] of Object.entries(characterDB)) {
+          if (Math.abs(data.strokes - strokeCount) <= 2) {
+            // Add some random score for demo
+            const score =
+              0.7 +
+              Math.random() * 0.3 -
+              Math.abs(data.strokes - strokeCount) * 0.1;
+            candidates.push({ char, data, score });
+          }
+        }
+
+        // Sort by score
+        candidates.sort((a, b) => b.score - a.score);
+
+        // Update display with best candidate
+        if (candidates.length > 0) {
+          const best = candidates[0];
+          updateCharacterDisplay(best.char, best.data);
+          showSuggestions(candidates.slice(0, 6));
+
+          // Update current character in array
+          if (mode === "word") {
+            if (allCharacters.length <= currentCharIndex) {
+              allCharacters.push(best.char);
+            } else {
+              allCharacters[currentCharIndex] = best.char;
+            }
+            updateWordRecognition();
+          }
+
+          showRecognitionFeedback(`Recognized: ${best.char}`);
+        }
+      }
+
+      function updateWordRecognition() {
+        const currentWord = allCharacters.join("");
+
+        // Check if we have a complete word match
+        if (wordDB[currentWord]) {
+          displayWordInfo(wordDB[currentWord]);
+        } else {
+          // Find similar words
+          const wordCandidates = findWordCandidates(currentWord);
+          displayWordSuggestions(wordCandidates);
+        }
+
+        // Update character counter
+        document.getElementById("characterCounter").textContent = `Character ${
+          currentCharIndex + 1
+        } of ${allCharacters.length}`;
+      }
+
+      function findWordCandidates(currentWord) {
+        const candidates = [];
+
+        for (const [word, data] of Object.entries(wordDB)) {
+          // Calculate similarity based on character matching
+          let similarity = 0;
+          const minLength = Math.min(word.length, currentWord.length);
+
+          for (let i = 0; i < minLength; i++) {
+            if (word[i] === currentWord[i]) {
+              similarity += 1;
+            }
+          }
+
+          similarity = similarity / Math.max(word.length, currentWord.length);
+
+          if (similarity > 0.3) {
+            candidates.push({ word, data, similarity });
+          }
+        }
+
+        return candidates
+          .sort((a, b) => b.similarity - a.similarity)
+          .slice(0, 4);
+      }
+
+      // ==================== DISPLAY FUNCTIONS ====================
+      function updateCharacterDisplay(char, data) {
+        document.getElementById("characterDisplay").textContent = char;
+        document.getElementById("pinyinDisplay").textContent = data.pinyin;
+        document.getElementById("meaningDisplay").textContent = data.meaning;
+        document.getElementById("strokeCount").textContent =
+          currentCharacterStrokes.length;
+        document.getElementById("hskLevel").textContent = `HSK ${data.hsk}`;
+        document.getElementById("radicalDisplay").textContent = data.radical;
+        document.getElementById("characterType").textContent = data.type;
+      }
+
+      function displayWordInfo(wordData) {
+        document.getElementById("wordDisplay").textContent =
+          allCharacters.join("");
+        document.getElementById("wordPinyinDisplay").textContent =
+          wordData.pinyin;
+        document.getElementById("wordMeaningDisplay").textContent =
+          wordData.meaning;
+        document.getElementById(
+          "wordLength"
+        ).textContent = `${allCharacters.length} characters`;
+        document.getElementById(
+          "wordHskLevel"
+        ).textContent = `HSK ${wordData.hsk}`;
+        document.getElementById("wordType").textContent = wordData.type;
+        document.getElementById("wordFrequency").textContent =
+          wordData.frequency;
+
+        // Display example sentences
+        const exampleContainer = document.getElementById("exampleSentences");
+        exampleContainer.innerHTML = "";
+
+        wordData.examples.forEach((example) => {
+          const exampleDiv = document.createElement("div");
+          exampleDiv.className = "example-item";
+          exampleDiv.innerHTML = `
+                    <div class="example-chinese">${example.chinese}</div>
+                    <div class="example-pinyin">${example.pinyin}</div>
+                    <div class="example-translation">${example.english}</div>
+                `;
+          exampleContainer.appendChild(exampleDiv);
+        });
+
+        document.getElementById("exampleSection").style.display = "block";
+      }
+
+      function displayWordSuggestions(candidates) {
+        const container = document.getElementById("wordSuggestionsList");
+        container.innerHTML = "";
+
+        candidates.forEach((candidate) => {
+          const item = document.createElement("div");
+          item.className = "word-suggestion-item";
+          item.innerHTML = `
+                    <div class="word-suggestion-chars">${candidate.word}</div>
+                    <div class="word-suggestion-pinyin">${candidate.data.pinyin}</div>
+                    <div class="word-suggestion-meaning">${candidate.data.meaning}</div>
+                `;
+
+          item.addEventListener("click", () => {
+            // Auto-complete the word
+            allCharacters = candidate.word.split("");
+            displayWordInfo(candidate.data);
+            showRecognitionFeedback(`Word selected: ${candidate.word}`);
+          });
+
+          container.appendChild(item);
+        });
+
+        document.getElementById("wordSuggestionsSection").style.display =
+          candidates.length > 0 ? "block" : "none";
+      }
+
+      function showSuggestions(candidates) {
+        const container = document.getElementById("suggestionsList");
+        container.innerHTML = "";
+
+        candidates.forEach((candidate) => {
+          const item = document.createElement("div");
+          item.className = "suggestion-item";
+          item.innerHTML = `
+                    <div class="suggestion-char">${candidate.char}</div>
+                    <div class="suggestion-pinyin">${candidate.data.pinyin}</div>
+                    <div class="suggestion-meaning">${candidate.data.meaning}</div>
+                `;
+
+          item.addEventListener("click", () => {
+            updateCharacterDisplay(candidate.char, candidate.data);
+
+            if (mode === "word") {
+              if (allCharacters.length <= currentCharIndex) {
+                allCharacters.push(candidate.char);
+              } else {
+                allCharacters[currentCharIndex] = candidate.char;
+              }
+              updateWordRecognition();
+            }
+
+            showRecognitionFeedback(`Selected: ${candidate.char}`);
+          });
+
+          container.appendChild(item);
+        });
+      }
+
+      function showRecognitionFeedback(message) {
+        const feedback = document.getElementById("recognitionFeedback");
+        feedback.textContent = message;
+        feedback.style.display = "block";
+
+        setTimeout(() => {
+          feedback.style.display = "none";
+        }, 1500);
+      }
+
+      // ==================== MODE MANAGEMENT ====================
+      function setMode(newMode) {
+        mode = newMode;
+
+        // Update UI
+        document.getElementById("modeIndicator").textContent =
+          mode === "character" ? "Character Mode" : "Word Mode";
+
+        document.getElementById("instructionText").textContent =
+          mode === "character"
+            ? "Draw one character at a time."
+            : 'Draw characters one by one. Click "Next Character" to continue.';
+
+        document.getElementById("singleCharDisplay").style.display =
+          mode === "character" ? "block" : "none";
+        document.getElementById("multiCharDisplay").style.display =
+          mode === "character" ? "none" : "block";
+        document.getElementById("wordSuggestionsSection").style.display =
+          mode === "character" ? "none" : "block";
+        document.getElementById("exampleSection").style.display =
+          mode === "character" ? "none" : "block";
+
+        // Update mode buttons
+        document
+          .getElementById("charModeBtn")
+          .classList.toggle("active", mode === "character");
+        document
+          .getElementById("wordModeBtn")
+          .classList.toggle("active", mode === "word");
+
+        // Reset for new mode
+        if (mode === "word") {
+          allCharacters = [];
+          currentCharIndex = 0;
+          document.getElementById("characterCounter").textContent =
+            "Character 1 of ?";
+          document.getElementById("wordDisplay").textContent = "?";
+        } else {
+          allCharacters = [];
+          currentCharIndex = 0;
+        }
+
+        clearCanvas();
+      }
+
+      function nextCharacter() {
+        if (mode !== "word") return;
+
+        // Save current character
+        if (currentCharacterStrokes.length > 0) {
+          currentCharIndex++;
+          currentCharacterStrokes = [];
+
+          // Clear drawing area but keep previous characters visible
+          ctx.fillStyle = "#f9f9f9";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+          // Update counter
+          document.getElementById(
+            "characterCounter"
+          ).textContent = `Character ${currentCharIndex + 1} of ${
+            allCharacters.length
+          }`;
+        }
+      }
+
+      // ==================== CANVAS CONTROLS ====================
+      function clearCanvas() {
+        ctx.fillStyle = "#f9f9f9";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        currentStroke = [];
+        currentCharacterStrokes = [];
+
+        if (mode === "character") {
+          allCharacters = [];
+          currentCharIndex = 0;
+          document.getElementById("characterDisplay").textContent = "?";
+          document.getElementById("pinyinDisplay").textContent =
+            "Draw a character";
+          document.getElementById("meaningDisplay").textContent =
+            "Use the canvas above";
+        }
+      }
+
+      function undoStroke() {
+        if (currentCharacterStrokes.length > 0) {
+          currentCharacterStrokes.pop();
+
+          // Redraw all strokes
+          clearCanvas();
+          ctx.strokeStyle = "#000000";
+
+          currentCharacterStrokes.forEach((stroke) => {
+            if (stroke.length > 0) {
+              ctx.beginPath();
+              ctx.moveTo(stroke[0].x, stroke[0].y);
+
+              for (let i = 1; i < stroke.length; i++) {
+                ctx.lineTo(stroke[i].x, stroke[i].y);
+              }
+
+              ctx.stroke();
+            }
+          });
+
+          recognizeCurrentCharacter();
+        }
+      }
+
+      // ==================== EVENT LISTENERS ====================
+      // Drawing events
+      canvas.addEventListener("mousedown", startDrawing);
+      canvas.addEventListener("mousemove", draw);
+      canvas.addEventListener("mouseup", stopDrawing);
+      canvas.addEventListener("mouseout", stopDrawing);
+
+      canvas.addEventListener("touchstart", (e) => {
+        e.preventDefault();
+        startDrawing(e);
+      });
+
+      canvas.addEventListener("touchmove", (e) => {
+        e.preventDefault();
+        draw(e);
+      });
+
+      canvas.addEventListener("touchend", stopDrawing);
+
+      // Mode buttons
+      document
+        .getElementById("charModeBtn")
+        .addEventListener("click", () => setMode("character"));
+      document
+        .getElementById("wordModeBtn")
+        .addEventListener("click", () => setMode("word"));
+
+      // Control buttons
+      document
+        .getElementById("clearBoard")
+        .addEventListener("click", clearCanvas);
+      document.getElementById("undoBtn").addEventListener("click", undoStroke);
+      document
+        .getElementById("nextCharBtn")
+        .addEventListener("click", nextCharacter);
+
+      // Stroke color controls
+      document.querySelectorAll(".stroke-color").forEach((color) => {
+        color.addEventListener("click", function () {
+          document
+            .querySelectorAll(".stroke-color")
+            .forEach((c) => (c.style.border = "3px solid white"));
+          this.style.border = "3px solid #2c3e50";
+          ctx.strokeStyle = this.style.backgroundColor;
+        });
+      });
+
+      // Set black as default
+      document.getElementById("colorBlack").style.border = "3px solid #2c3e50";
+
+      // Stroke width control
+      document
+        .getElementById("strokeWidth")
+        .addEventListener("input", function () {
+          const width = this.value;
+          document.getElementById("strokeWidthValue").textContent = width;
+          ctx.lineWidth = width;
+        });
+
+      // Initialize with some suggestions
+      const initialCandidates = [
+        { char: "你", data: characterDB["你"], score: 0.9 },
+        { char: "好", data: characterDB["好"], score: 0.85 },
+        { char: "人", data: characterDB["人"], score: 0.8 },
+        { char: "大", data: characterDB["大"], score: 0.8 },
+        { char: "中", data: characterDB["中"], score: 0.75 },
+        { char: "国", data: characterDB["国"], score: 0.7 },
+      ];
+
+      showSuggestions(initialCandidates);
+
+      // Initialize with some word suggestions
+      const initialWordCandidates = [
+        { word: "你好", data: wordDB["你好"], similarity: 0.9 },
+        { word: "谢谢", data: wordDB["谢谢"], similarity: 0.8 },
+        { word: "中国", data: wordDB["中国"], similarity: 0.7 },
+        { word: "学生", data: wordDB["学生"], similarity: 0.6 },
+      ];
+
+      displayWordSuggestions(initialWordCandidates);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Random Listening Practice</title>
+    <link rel="stylesheet" href="../../css/styles.css" />
+    <link rel="stylesheet" href="../../css/listening.css" />
+  </head>
+  <body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+      <div class="loading-content">
+        <div class="loading-spinner"></div>
+        <h2>Loading Listening Practice</h2>
+        <p>Preparing audio exercises...</p>
+        <div class="loading-progress">
+          <div class="loading-bar" id="loadingBar"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main App Content -->
+    <div class="app-content" id="appContent" style="display: none">
+      <div class="nav-header">
+        <div class="nav-header-links">
+          <a href="../index.html" class="nav-back">← Back to Dashboard</a>
+          <br />
+          <a href="vocabulary.html" class="nav-back">← Study Vocabulary</a>
+        </div>
+        <h1>Random Listening Practice</h1>
+        <button class="theme-toggle" id="themeToggle">🌙</button>
+      </div>
+
+      <div class="listening-container">
+        <!-- Stats Panel -->
+        <div class="stats-panel">
+          <div class="stat-item">
+            <div class="stat-value" id="statsTotal">0</div>
+            <div class="stat-label">Total Words</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="statsPlayed">0</div>
+            <div class="stat-label">Played Today</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="statsUnique">0</div>
+            <div class="stat-label">Unique Words</div>
+          </div>
+        </div>
+
+        <!-- Audio Controls -->
+        <div class="audio-controls">
+          <div class="audio-loading" id="audioLoading"></div>
+          <button class="audio-btn" id="playBtn">🔊</button>
+          <div class="controls">
+            <button class="btn" id="showBtn">Show Word</button>
+            <button class="btn ghost" id="nextBtn">Next Word</button>
+          </div>
+          <div class="subtitle" style="text-align: center; margin-top: 10px">
+            Press SPACE to play, S to show/hide, N for next word
+          </div>
+        </div>
+
+        <!-- Word Reveal Section -->
+        <div class="word-reveal" id="wordReveal">
+          <div class="revealed-word">
+            <div class="revealed-hanzi" id="revealedHanzi">你好</div>
+            <div class="revealed-pinyin" id="revealedPinyin">nǐ hǎo</div>
+            <div class="revealed-meaning" id="revealedMeaning">Hello</div>
+            <div class="revealed-info">
+              <span id="revealedCategory">Greeting</span>
+              <span id="revealedLevel">HSK 1</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Play History -->
+        <!-- <div class="play-history">
+          <div class="history-header">
+            <h3>Recent Words</h3>
+            <button class="btn ghost" id="clearHistoryBtn">
+              Clear History
+            </button>
+          </div>
+          <div class="history-list" id="historyList">
+          </div>
+        </div> -->
+      </div>
+    </div>
+
+    <script src="../../js/listening.js"></script>
+  </body>
+</html>
