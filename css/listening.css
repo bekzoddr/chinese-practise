@@ -5,6 +5,65 @@
     padding: 20px;
 }
 
+/* Filter Section */
+.filter-section {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.filter-label {
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.filter-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    padding: 8px 16px;
+    border: 2px solid var(--border-color);
+    background: transparent;
+    border-radius: 20px;
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.filter-btn:hover {
+    border-color: var(--primary);
+    background: rgba(37, 99, 235, 0.1);
+}
+
+.filter-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+/* Repeat Info */
+.repeat-info {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-top: 10px;
+    text-align: center;
+    background: rgba(37, 99, 235, 0.1);
+    padding: 5px 15px;
+    border-radius: 20px;
+    display: inline-block;
+}
+
+/* Audio Display */
 .audio-display {
     text-align: center;
     margin: 40px 0;
@@ -208,6 +267,16 @@
         padding: 10px;
     }
 
+    .filter-section {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .filter-buttons {
+        width: 100%;
+        justify-content: center;
+    }
+
     .revealed-hanzi {
         font-size: 36px;
     }
@@ -233,7 +302,9 @@
     .stats-panel {
         grid-template-columns: repeat(2, 1fr);
     }
-}@media (max-width: 480px) {
+}
+
+@media (max-width: 480px) {
     .revealed-hanzi {
         font-size: 32px;
     }
@@ -266,6 +337,15 @@
     .stats-panel {
         grid-template-columns: 1fr;
     }
+
+    .controls {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .controls .btn {
+        width: 100%;
+    }
 }
 
 /* Dark mode adjustments */
@@ -275,4 +355,212 @@
 
 .dark-mode .history-item {
     background: rgba(255, 255, 255, 0.05);
+}
+
+.dark-mode .filter-section {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.got-image {
+    margin: 0px;
+    border: 2px rgba(255, 255, 255, 0.229) inset;
+}
+
+.got-image img {
+    width: 100%;
+}
+
+/* Current word indicator */
+.current-word-indicator {
+    font-size: 12px;
+    color: var(--primary);
+    background: rgba(37, 99, 235, 0.1);
+    padding: 4px 10px;
+    border-radius: 12px;
+    display: inline-block;
+    margin-bottom: 10px;
+}/* Current Word Info */
+.current-word-info {
+    background: var(--preview-bg);
+    border-radius: 12px;
+    padding: 12px 20px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--text-color);
+}
+
+.current-word-indicator {
+    font-weight: 600;
+    color: var(--primary);
+}
+
+/* Enhanced filter sections */
+.filter-section {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 15px;
+    transition: all 0.3s ease;
+}
+
+.filter-label {
+    font-weight: 600;
+    color: var(--text-color);
+    min-width: 120px;
+}
+
+.filter-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    flex: 1;
+}
+
+.filter-btn {
+    padding: 8px 16px;
+    border: 2px solid var(--border-color);
+    background: transparent;
+    border-radius: 20px;
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.filter-btn:hover {
+    border-color: var(--primary);
+    background: rgba(37, 99, 235, 0.1);
+    transform: translateY(-1px);
+}
+
+.filter-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+}
+
+/* Category tags */
+.category-tag {
+    display: inline-block;
+    padding: 4px 10px;
+    background: rgba(37, 99, 235, 0.1);
+    border-radius: 12px;
+    font-size: 12px;
+    color: var(--primary);
+    margin-left: 8px;
+    font-weight: 500;
+}
+
+/* Active filter display */
+.active-filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.active-filter-tag {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 12px;
+    background: rgba(37, 99, 235, 0.1);
+    border-radius: 16px;
+    font-size: 13px;
+    color: var(--primary);
+    border: 1px solid var(--primary);
+}
+
+.active-filter-tag button {
+    background: none;
+    border: none;
+    color: var(--primary);
+    cursor: pointer;
+    font-size: 14px;
+    padding: 0;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.active-filter-tag button:hover {
+    background: rgba(37, 99, 235, 0.2);
+}
+
+/* Enhanced history items */
+.history-item .category-tag {
+    margin-left: 0;
+    margin-top: 5px;
+    font-size: 11px;
+}
+
+/* Scrollable category buttons */
+.filter-buttons.scrollable {
+    overflow-x: auto;
+    padding-bottom: 5px;
+    max-width: 100%;
+}
+
+.filter-buttons.scrollable::-webkit-scrollbar {
+    height: 4px;
+}
+
+.filter-buttons.scrollable::-webkit-scrollbar-track {
+    background: var(--border-color);
+    border-radius: 2px;
+}
+
+.filter-buttons.scrollable::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 2px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .filter-section {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .filter-label {
+        min-width: auto;
+    }
+
+    .filter-buttons {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .current-word-info {
+        flex-direction: column;
+        gap: 5px;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .filter-btn {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+
+    .current-word-info {
+        font-size: 13px;
+        padding: 10px;
+    }
 }

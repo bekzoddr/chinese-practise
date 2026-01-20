@@ -33,6 +33,35 @@
       </div>
 
       <div class="listening-container">
+        <!-- Filter Sections -->
+        <div class="filter-section">
+          <div class="filter-label">Filter by HSK Level:</div>
+          <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="HSK 1">HSK 1</button>
+            <button class="filter-btn" data-filter="HSK 2">HSK 2</button>
+          </div>
+        </div>
+
+        <div class="filter-section">
+          <div class="filter-label">Filter by Category:</div>
+          <div class="filter-buttons" id="categoryFilters">
+            <button class="filter-btn active" data-category="all">All</button>
+            <!-- Categories will be populated by JavaScript -->
+          </div>
+        </div>
+
+        <div class="filter-section">
+          <div class="filter-label">Sort by:</div>
+          <div class="filter-buttons">
+            <button class="filter-btn active" data-sort="random">Random</button>
+            <button class="filter-btn" data-sort="alphabetical">A-Z</button>
+            <button class="filter-btn" data-sort="reverse">Z-A</button>
+            <button class="filter-btn" data-sort="pinyin">Pinyin</button>
+            <button class="filter-btn" data-sort="category">Category</button>
+          </div>
+        </div>
+
         <!-- Stats Panel -->
         <div class="stats-panel">
           <div class="stat-item">
@@ -41,21 +70,36 @@
           </div>
           <div class="stat-item">
             <div class="stat-value" id="statsPlayed">0</div>
-            <div class="stat-label">Played Today</div>
+            <div class="stat-label">Played</div>
           </div>
           <div class="stat-item">
             <div class="stat-value" id="statsUnique">0</div>
-            <div class="stat-label">Unique Words</div>
+            <div class="stat-label">Unique</div>
           </div>
+          <div class="stat-item">
+            <div class="stat-value" id="statsFiltered">0</div>
+            <div class="stat-label">Available</div>
+          </div>
+        </div>
+
+        <!-- Current Word Info -->
+        <div class="current-word-info" id="currentWordInfo">
+          <span class="current-word-indicator">Current: </span>
+          <span id="currentWordLevel">HSK 1</span> •
+          <span id="currentWordCategory">pronouns</span>
         </div>
 
         <!-- Audio Controls -->
         <div class="audio-controls">
           <div class="audio-loading" id="audioLoading"></div>
           <button class="audio-btn" id="playBtn">🔊</button>
+          <div class="repeat-info" id="repeatInfo">
+            Repeat: <span id="repeatCount">0</span> times
+          </div>
           <div class="controls">
             <button class="btn" id="showBtn">Show Word</button>
             <button class="btn ghost" id="nextBtn">Next Word</button>
+            <button class="btn ghost" id="repeatBtn">Repeat</button>
           </div>
           <div class="subtitle" style="text-align: center; margin-top: 10px">
             Press SPACE to play, S to show/hide, N for next word
@@ -76,7 +120,7 @@
         </div>
 
         <!-- Play History -->
-        <!-- <div class="play-history">
+        <div class="play-history">
           <div class="history-header">
             <h3>Recent Words</h3>
             <button class="btn ghost" id="clearHistoryBtn">
@@ -84,8 +128,9 @@
             </button>
           </div>
           <div class="history-list" id="historyList">
+            <!-- History items will be added here -->
           </div>
-        </div> -->
+        </div>
       </div>
     </div>
 
