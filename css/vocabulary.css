@@ -2,7 +2,9 @@
 .header-section {
     margin-bottom: 30px;
 }
-
+body{
+  overflow-x:hidden;
+}
 .page-nav {
     margin-top: 15px;
 }
@@ -180,9 +182,9 @@
 /* Vocabulary Grid */
 .vocabulary-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 20px;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
 }
 
 .vocab-card {
@@ -196,6 +198,8 @@
     display: flex;
     flex-direction: column;
     height: 220px;
+    width: 250px
+   
 }
 
 .vocab-card:hover {
